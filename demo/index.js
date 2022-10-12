@@ -6,9 +6,27 @@ loam.initialize('/', 'https://unpkg.com/gdal-js@2.0.0/');
 const EPSG4326 =
     'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]';
 
+let map = {}
+
+function displayMap() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGFja2FiZXJyeSIsImEiOiJjbDZ6dnVwNXEwOGg0M25ucTI0c3p5bDd4In0.SNzd-kL8jg0TVnRdqcOKuA';
+    map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        center: [-74.5, 40], // starting position [lng, lat]
+        zoom: 9, // starting zoom
+        projection: 'globe' // display the map as a 3D globe
+    });
+     
+    map.on('style.load', () => {
+        map.setFog({}); // Set the default atmosphere style
+    });
+
+}
 function displayInfo() {
     const file = document.querySelector('#geotiff-file').files[0];
     const displayElem = document.getElementById('gdalinfo');
+    const infoElem = document.getElementById('mapinfo');
 
     // Clear display text
     displayElem.innerText = '';
@@ -34,8 +52,10 @@ function displayInfo() {
                         geoTransform[3] + geoTransform[4] * x + geoTransform[5] * y,
                     ];
                 });
+                
 
                 loam.reproject(wkt, EPSG4326, cornersGeo).then((cornersLngLat) => {
+                    map.setCenter(cornersLngLat[0])
                     displayElem.innerText += 'Corner Coordinates:\n';
                     cornersLngLat.forEach(([lng, lat], i) => {
                         displayElem.innerText +=
@@ -49,6 +69,7 @@ function displayInfo() {
                             lat.toString() +
                             ')\n';
                     });
+                    infoElem.innerText += JSON.stringify(map.getCenter()) + '\n';
                 });
             }
         );
@@ -58,3 +79,9 @@ function displayInfo() {
 document.getElementById('geotiff-file').onchange = function () {
     displayInfo();
 };
+
+window.onload = (event) => {
+    displayMap();
+};
+
+onDOMContentLoaded = (event) => { displayMap(); };

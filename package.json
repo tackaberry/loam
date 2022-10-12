@@ -6,11 +6,15 @@
     "scripts": {
         "build": "webpack --config=webpack.dev.js && webpack --config=webpack.prod.js",
         "dev": "webpack --progress --color --watch --config=webpack.dev.js",
-        "demo": "webpack serve --config=webpack.dev.js",
+        "demo": "webpack serve --hot --config=webpack.dev.js",
         "format": "prettier --write ./src",
         "test": "karma start --single-run --browser ChromeHeadless karma.conf.js",
         "test:watch": "karma start --auto-watch --browser ChromeHeadless karma.conf.js",
-        "test:ci": "prettier --check src/**/*.js && webpack --config=webpack.dev.js && webpack --config=webpack.prod.js && karma start --single-run --browser ChromeHeadless karma.conf.js"
+        "test:ci": "prettier --check src/**/*.js && webpack --config=webpack.dev.js && webpack --config=webpack.prod.js && karma start --single-run --browser ChromeHeadless karma.conf.js",
+        "cy:open": "cypress open",
+        "cy:run": "cypress run",
+        "test:e2e": "start-server-and-test demo http://localhost:8080 cy:open",
+        "test:e2e:ci": "start-server-and-test demo http://localhost:8080 cy:run"
     },
     "repository": {
         "type": "git",
@@ -41,6 +45,7 @@
         "babel-plugin-add-module-exports": "^1.0.4",
         "chai": "^4.3.6",
         "chai-as-promised": "^7.1.1",
+        "cypress": "^10.10.0",
         "eslint": "^7.31.0",
         "eslint-webpack-plugin": "^3.0.1",
         "karma": "^6.4.1",
@@ -49,8 +54,10 @@
         "karma-chai-as-promised": "^0.1.2",
         "karma-chrome-launcher": "^3.1.1",
         "karma-mocha": "^2.0.1",
+        "mapbox-gl": "^2.10.0",
         "mocha": "^10.0.0",
         "prettier": "^2.7.1",
+        "start-server-and-test": "^1.14.0",
         "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^5.74.0",
         "webpack-cli": "^4.7.2",
